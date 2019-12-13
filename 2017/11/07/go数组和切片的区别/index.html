@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>go语言中的数组和切片 | 云原生笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="go">
+    <meta name="description" content="数组数组（array）是go语言编程中较为常用的数据结构之一，数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型例如整形、字符串或者自定义类型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言中的数组和切片">
+<meta property="og:url" content="http:&#x2F;&#x2F;liangbin.xyz&#x2F;2017&#x2F;11&#x2F;07&#x2F;go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB&#x2F;index.html">
+<meta property="og:site_name" content="云原生笔记">
+<meta property="og:description" content="数组数组（array）是go语言编程中较为常用的数据结构之一，数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型例如整形、字符串或者自定义类型。">
+<meta property="article:published_time" content="2017-11-07T00:55:29.000Z">
+<meta property="article:modified_time" content="2019-12-12T02:27:11.804Z">
+<meta property="article:author" content="LIANGBIN@PA">
+<meta property="article:tag" content="go">
+<meta name="twitter:card" content="summary">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.1.1"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">LIANGBIN@PA</h5>
+          <a href="mailto:hzliangbin@foxmail.com" title="hzliangbin@foxmail.com" class="mail">hzliangbin@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                首页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-link"></i>
+                关于作者
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">go语言中的数组和切片</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">go语言中的数组和切片</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-07T00:55:29.000Z" itemprop="datePublished" class="page-time">
+  2017-11-07
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#数组"><span class="post-toc-number">1.</span> <span class="post-toc-text">数组</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#数组的声明和初始化"><span class="post-toc-number">2.</span> <span class="post-toc-text">数组的声明和初始化</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#数组的值传递"><span class="post-toc-number">3.</span> <span class="post-toc-text">数组的值传递</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#切片"><span class="post-toc-number">4.</span> <span class="post-toc-text">切片</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#切片的声明和初始化"><span class="post-toc-number">5.</span> <span class="post-toc-text">切片的声明和初始化</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#切片的结构"><span class="post-toc-number">6.</span> <span class="post-toc-text">切片的结构</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#异同"><span class="post-toc-number">7.</span> <span class="post-toc-text">异同</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-go数组和切片的区别"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">go语言中的数组和切片</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-07 08:55:29" datetime="2017-11-07T00:55:29.000Z"  itemprop="datePublished">2017-11-07</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h5 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h5><p>数组（array）是go语言编程中较为常用的数据结构之一，数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型例如整形、字符串或者自定义类型。<a id="more"></a></p>
+<p>和在c语言中不同，数组在go语言中是一个值类型，是真真实实的数组，而不是一个纸箱数组内存起始位置的指针，也不能和同类型的指针进行转化。所有的值类型变量在赋值和作为参数传递时都将进行一次复制动作。如果将数组作为函数的参数类型，则在函数调用时，该参数将发生数据赋值。因此，在函数体中无法修改传入的数组的内容，因为函数内操作的只是传入数组的一份副本。</p>
+<h5 id="数组的声明和初始化"><a href="#数组的声明和初始化" class="headerlink" title="数组的声明和初始化"></a>数组的声明和初始化</h5><pre><code>var variable_name [SIZE] variable_type
+var balance [10] float32</code></pre><p>SIZE即数组长度，variable_type表示数组存储类型，variable_name为数组名。<br>在Go语言中，数组长度定义后就不可更改。声明长度SIZE可以是常量，或者是常量表达式（常量表达式是指在编译期间即可计算结果的表达式）。数组的长度属于数组类型的一部分，是其一个内置常量。可通过内建函数len()获取。</p>
+<pre><code>package main
+
+import(
+    &quot;fmt&quot;
+)
+
+func main(){
+var arr1 [5]int
+    arr2 := [5]int{1, 2, 3, 4, 5}   //指定长度为5，并赋5个初始值
+    arr3 := [5]int{1, 2, 3} //指定长度为5，对前3个元素进行赋值，其他元素为零值
+    arr4 := [5]int{4: 1}//指定长度为5，对第5个元素赋值
+    arr5 := [...]int{1, 2, 3, 4, 5} //不指定长度，对数组赋以5个值
+    arr6 := [...]int{8: 1}  //不指定长度，对第9个元素（下标为8）赋值1
+    fmt.Println(arr1, arr2, arr3, arr4, arr5, arr6)
+}</code></pre><p>如上，输出结果为：</p>
+<pre><code>[root@localhost mygo]# go run test.go 
+[0 0 0 0 0] [1 2 3 4 5] [1 2 3 0 0] [0 0 0 0 1] [1 2 3 4 5] [0 0 0 0 0 0 0 0 1]</code></pre><h5 id="数组的值传递"><a href="#数组的值传递" class="headerlink" title="数组的值传递"></a>数组的值传递</h5><pre><code>package main
+
+import(
+&quot;fmt&quot;
+)
+
+func modify(arr [5]int){
+   arr[0] = 10
+   fmt.Println(&quot;In modify(), arr values:&quot;, arr)
+}
+
+func main(){
+    arr := [5]int{1, 2, 3, 4, 5}
+    modify(arr)
+    fmt.Println(&quot;In main(), arr values:&quot;, arr)
+}</code></pre><p>输出结果为</p>
+<pre><code>[root@localhost mygo]# go run test.go 
+In modify(), arr values: [10 2 3 4 5]
+In main(), arr values: [1 2 3 4 5]</code></pre><p>注意：在定义多维数组时，仅第一维度允许使用“…”，内置函数len和cap返回的都是第一维度长度。如果元素类型本身支持“==”“！=”操作符，那么数组也支持此操作。</p>
+<h5 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h5><p>go语言中，切片(slice)是对数组的抽象，其本身并非动态数组或数组指针。它内部通过指针引用底层数组，设定相关属性并将数据读写操作限定在指定区域内。上文提到，go数组长度是不可改变的，在特定场景中就不太实用。go提供了一种较为灵活且功能更为强悍的内置类型——切片。与数组相比，切片的长度是不固定的，可以追加元素，在追加时可能使切片的容量增大。</p>
+<p>另外，前文提到go数组是值类型，赋值和函数传参操作都会赋值整个数组数据。如果在数组大小非常大的情况下，发生值传递，这样将会消耗掉大量内存。而切片是引用传递，用来代替数组传参可以避免复制开销。</p>
+<h5 id="切片的声明和初始化"><a href="#切片的声明和初始化" class="headerlink" title="切片的声明和初始化"></a>切片的声明和初始化</h5><pre><code>//切片不需要说明长度
+var identifier []type
+
+//使用make()函数来创建切片
+var slice1 []type = make([]type, len)
+
+//简写
+slice1 := make([]type, len)</code></pre><p>注意上述方式的区别。第一种仅定义了一个[]type类型变量，并未执行初始化语句。后两种则用初始化表达式完成了全部创建过程。</p>
+<h5 id="切片的结构"><a href="#切片的结构" class="headerlink" title="切片的结构"></a>切片的结构</h5><pre><code>type slice struct {
+    array unsafe.pointer 
+    len int  
+    cap int  
+}</code></pre><p>切片本身只是个只读对象，其工作机制类似数组指针的一种包装。</p>
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x := [...]<span class="keyword">int</span>&#123;<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;</span><br><span class="line"></span><br><span class="line">expression      slice                 <span class="built_in">len</span>       <span class="built_in">cap</span>     </span><br><span class="line">------------+-----------------------+-------+---------+------------</span><br><span class="line">x[:]          [<span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span>]    <span class="number">10</span>       <span class="number">10</span>       x[<span class="number">0</span>:<span class="built_in">len</span>(x)]</span><br><span class="line">x[<span class="number">2</span>:<span class="number">5</span>]        [<span class="number">2</span> <span class="number">3</span> <span class="number">4</span>]                   <span class="number">3</span>        <span class="number">8</span>       </span><br><span class="line">x[<span class="number">2</span>:<span class="number">5</span>:<span class="number">7</span>]      [<span class="number">2</span> <span class="number">3</span> <span class="number">4</span>]                   <span class="number">3</span>        <span class="number">5</span></span><br><span class="line">x[<span class="number">4</span>:]         [<span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span>]             <span class="number">6</span>        <span class="number">6</span>       x[<span class="number">4</span>:<span class="built_in">len</span>(x)] </span><br><span class="line">x[:<span class="number">4</span>]         [<span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span>]                 <span class="number">4</span>       <span class="number">10</span>       x[<span class="number">0</span>:<span class="number">4</span>] </span><br><span class="line">x[:<span class="number">4</span>:<span class="number">6</span>]       [<span class="number">0</span> <span class="number">1</span> <span class="number">2</span> <span class="number">3</span>]                 <span class="number">4</span>        <span class="number">6</span>       x[<span class="number">0</span>:<span class="number">4</span>:<span class="number">6</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="异同"><a href="#异同" class="headerlink" title="异同"></a>异同</h5><p>数组和切片同属集合类。切片的设计场景弥补了数组固定长度带来的不变，在使用切片时候能享受数组的便利，又可以不必过于在意数组固定长度带来的束缚。最重要的区别，数组的值其长度是固定的，而切片类型的值是可变长的。</p>
+<p>切片类似java中的list，长度可以自动地随着其中元素数量增长而动态扩容，同时数量减少不会缩容。</p>
+<p>切片可以看成是对数组的封装。切片的底层数据结构中，包含数组。切片的容量实际上代表了底层数组的长度。</p>
+<p>只要新长度不会超过切片的原容量，那么使用append函数对其追加元素的时候就不会引起扩容，只会使得紧靠切片窗口右边的（底层数组中的）元素被新的元素替换掉。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/" target="_blank" rel="external">http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://liangbin.xyz">
+            <img src="/img/avatar.jpg" alt="LIANGBIN@PA">
+            LIANGBIN@PA
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/go/" rel="tag">go</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/&title=《go语言中的数组和切片》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/&title=《go语言中的数组和切片》 — 云原生笔记&source=数组数组（array）是go语言编程中较为常用的数据结构之一，数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型例如整..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《go语言中的数组和切片》 — 云原生笔记&url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/&via=http://liangbin.xyz" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2019/12/12/pod%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">pod的数据结构</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/09/12/%E4%BA%91%E5%8E%9F%E7%94%9F%E7%9B%B8%E5%85%B3%E7%AB%99%E7%82%B9/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">云原生相关站点</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>LIANGBIN@PA &copy; 2016 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/&title=《go语言中的数组和切片》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/&title=《go语言中的数组和切片》 — 云原生笔记&source=数组数组（array）是go语言编程中较为常用的数据结构之一，数组是具有相同唯一类型的一组已编号且长度固定的数据项序列，这种类型可以是任意的原始类型例如整..." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《go语言中的数组和切片》 — 云原生笔记&url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/&via=http://liangbin.xyz" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://liangbin.xyz/2017/11/07/go%E6%95%B0%E7%BB%84%E5%92%8C%E5%88%87%E7%89%87%E7%9A%84%E5%8C%BA%E5%88%AB/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Android图像处理中踩过的一些坑 | 云原生笔记</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android">
+    <meta name="description" content="关于图片的操作一直是Andriod开发中备受关注的一个点，特别是新手，一不注意分分钟就会碰到OOM异常。本文总结一下，图片处理这一块，踩过的坑有哪些。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android图像处理中踩过的一些坑">
+<meta property="og:url" content="http:&#x2F;&#x2F;liangbin.xyz&#x2F;2016&#x2F;07&#x2F;17&#x2F;Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91&#x2F;index.html">
+<meta property="og:site_name" content="云原生笔记">
+<meta property="og:description" content="关于图片的操作一直是Andriod开发中备受关注的一个点，特别是新手，一不注意分分钟就会碰到OOM异常。本文总结一下，图片处理这一块，踩过的坑有哪些。">
+<meta property="og:image" content="http:&#x2F;&#x2F;7xsfxq.com1.z0.glb.clouddn.com&#x2F;575658117.jpg">
+<meta property="article:published_time" content="2016-07-17T10:25:29.000Z">
+<meta property="article:modified_time" content="2019-12-12T02:26:52.388Z">
+<meta property="article:author" content="LIANGBIN@PA">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;7xsfxq.com1.z0.glb.clouddn.com&#x2F;575658117.jpg">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.1.1"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">LIANGBIN@PA</h5>
+          <a href="mailto:hzliangbin@foxmail.com" title="hzliangbin@foxmail.com" class="mail">hzliangbin@foxmail.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                首页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-link"></i>
+                关于作者
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Android图像处理中踩过的一些坑</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Android图像处理中踩过的一些坑</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-07-17T10:25:29.000Z" itemprop="datePublished" class="page-time">
+  2016-07-17
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+
+<article id="post-Android图像处理中踩过的一些坑"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Android图像处理中踩过的一些坑</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-07-17 18:25:29" datetime="2016-07-17T10:25:29.000Z"  itemprop="datePublished">2016-07-17</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>关于图片的操作一直是Andriod开发中备受关注的一个点，特别是新手，一不注意分分钟就会碰到OOM异常。本文总结一下，图片处理这一块，踩过的坑有哪些。<a id="more"></a></p>
+<p><strong>**问题1</strong>：在图库（照片墙）中显示的是图片A，点击图片显示的大图是另外一张图片B，而图片B实际上应该显示的图片（某一张图片如此，不是所有图片都不一致）。**</p>
+<p>解决过程：</p>
+<p>第一反应是跳转时，携带的图片路径错误导致的，但是很快排除这个原因了。因为只有某一张图片如此，多数图片都可以正确显示。</p>
+<p>然后以为是机型问题，遂搁置。后来在模拟器上测试，由于模拟器的相册图片很少，很快就定位到，出问题的图片是一张临时保存的图片crop_tmp.jpg，它总是被每次截图后保存的图片以同样的命名覆盖。</p>
+<p>通过网上查找资料，推测可能是图片的缩略图和原图不一致，不一致的原因是因为图片直接以同名覆盖时，只更改了原图而缩略图不变（在出现上述的问题后，只要重新debug再次进入到图库，可以看到之前出现问题的图A变为图B了，点击图B预览到的大图也是图B，一致，这个情况也支持了我上述的猜测）。后来在每次截图以同名文件覆盖后，都调用如下代码：</p>
+<pre><code> private void deleteTmpImage(String path) {
+    File file = new File(path);
+     file.delete();
+    MediaScannerConnection.scanFile(this,
+     new String[]{file.getAbsolutePath()}, null,
+        new MediaScannerConnection.OnScanCompletedListener() {
+        @Override
+        public void onScanCompleted(String path, Uri uri) {
+        }
+    });
+}   </code></pre><p>通知系统重新扫描媒体库。但实际上没有作用，问题依旧没有解决。</p>
+<p>接着考虑到有可能是Fresco自身的缓存机制引起的，遂将目光转向了Fresco。先从LoadingImageView的加载图片的方法入手，打印出路径，发现图片的URI地址不规范。</p>
+<pre><code>//不规范写法导致bug
+file:/storage/emulated/0/netease/vs/crop_temp.jpg
+
+//规范写法，bug消除
+file:///storage/emulated/0/netease/vs/crop_temp.jpg</code></pre><p>至此，该问题得到解决。这个问题非常隐蔽，因为第一种写法，fresco也能正确加载出图片，导致走了许多弯路。</p>
+<p><strong>**问题2</strong>：删除某一张图片后，在图库（照片墙）界面，该图片原来的位置会显示Fresco加载中的占位图。**</p>
+<p>解决过程：</p>
+<p>删除图片的代码：</p>
+<pre><code>File file = new File(path);
+file.delete();</code></pre><p>这样其实还不够，删除掉一张图片之后，应该及时调用扫描一次系统媒体库，刷新数据。如下</p>
+<pre><code>MediaScannerConnection.scanFile(this, new String[]{file.getAbsolutePath()}, null,
+                   new MediaScannerConnection.OnScanCompletedListener() {
+                   @Override
+                   public void onScanCompleted(String path, Uri uri) {
+
+                   }
+               });</code></pre><p>第一个参数是传入调用者的context,第二个参数一系列待扫描路径的数组，第三个参数是这些路径所对应的文件是属于哪些mimeType,第四个参数为扫描成功的回调。调用该静态方法后，会主动通知系统刷新图库。涉及到文件的删除修改的，都应该及时通知系统主动扫描刷新数据。</p>
+<p><strong>问题3：图库（照片墙）同时加载大量图片时，界面中的部分图片加载不出来。</strong></p>
+<p>   <img src="http://7xsfxq.com1.z0.glb.clouddn.com/575658117.jpg" alt=""></p>
+<p>解决过程：</p>
+<p>原先使用的是setLoadingImageView()方法，在某一次Fresco的版本升级后，出现了上述问题。在积累一点经验之后，首先想到的是内存的问题。查看这个界面的内存占用情况。</p>
+<pre><code>/**
+ * 显示图库相片时使用的方法
+ *
+ * @param url
+ * @param width
+ * @param height
+ */
+public void setGalleryImage(final String url, int width, int height) {
+    Uri uri = Uri.parse(url);
+    ImageRequest imageRequest = ImageRequestBuilder
+            .newBuilderWithSource(uri)
+            .setResizeOptions(new ResizeOptions(width, height))//图片目标大小
+            .build();
+    DraweeController controller = Fresco.newDraweeControllerBuilder()
+            .setOldController(getController())
+            .setImageRequest(imageRequest)
+            .build();
+    this.setController(controller);
+
+}</code></pre><p>Resize这个选项，并不改变原始图片，它只在解码前修改内存中的图片大小。对于要展示一张实际尺寸远大于显示尺寸的图片来说，它可以有效的节省内存。但实际上这个方法也不是一劳永逸的。一方面，它不支持PNG格式，当相册同时显示多张PNG格式图片时，仍有可能出现上述问题。另一方面，通过对屏幕宽度3等分来确定剪裁的大小，这种做法也十分简单粗暴，如果正好同时加载到本地多张10+M的图片，还是会有隐患。</p>
+<p>注意到Fresco在0.8.1版本后添加了<a href="http://fresco-cn.org/docs/resizing-rotating.html#downsampling" target="_blank" rel="noopener">Downsampling</a>这个新特性，它更好的支持不同格式的压缩和裁剪，速度也比Resize更快。</p>
+<p><strong>**问题4</strong>：图片截图后上传成功后，服务器返回保存成功的信息，但是进入到个人主页界面的头像，却依然是之前的，没有更新。**</p>
+<p>解决过程：</p>
+<p>抓包发现上传的图片没有后缀名，添加jpg后缀名解决。</p>
+<p><strong>问题5：上传图片，后台返回服务器错误。</strong></p>
+<p>解决过程：</p>
+<p>服务器端对上传的文件大小做了限制。这里需要对图片进行压缩。包括截图中出现的OOM问题，也是没有对图片进行压缩造成的。</p>
+<p>问题6：拍照后返回的data为空</p>
+<p><strong>**补充</strong>：**</p>
+<p>关于图片压缩，就得先提到图片的存在的三种形式,及如何检测大小。</p>
+<ol>
+<li>文件形式 用File.length()查看大小</li>
+<li>流的形式 将图片文件读入到内存输入流中，看它的字节数</li>
+<li>Bitmap  bigmap.getByteCount</li>
+</ol>
+<p>区别是，文件形式和流的形式对图片体积大小并没有影响。即，一张图片如果存在手机上是100K,那么通过流的形式读到内存中，也只占100K内存。当图片以Bitmap形式存在是，内存会瞬间变大。500K文件形式的图片加载到内存中，以Bitmap形式存在时，占用内存可能会将近10M。</p>
+<p>看秀品里的一个工具类ImageUtil里的两个方法：</p>
+<pre><code>public static boolean saveBitmap2File(Bitmap bmp, int quality, StoreFile file) {
+    boolean ret = false;
+    OutputStream stream = null;
+    try {
+        stream = file.openOutputStream();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    if (stream != null) {
+        CompressFormat format = CompressFormat.JPEG;
+        if (bmp.hasAlpha()) {
+            format = CompressFormat.PNG;
+        }
+
+        ret = bmp.compress(format, quality, stream);
+    }
+
+    file.close();
+    return ret;
+}</code></pre><p>这个方法可以通过制定quality参数，通过压缩图片的质量达到压缩输出的File文件的大小的效果，较小的File文件，可以方便的上传到服务器，减少流量的消耗。实际上图片的像素并没有改变,通过BitmapFactory.decodeFile到内存中时占用的内存大小并没有变化。例如一张1024x1024像素的图片来说，假定其采用ARGB8888格式（32位）存储，其占用的内存为1024x1024x4Byte，即4MB。因为像素没有改变，实际上，以Bitmap占用的内存不会有显著的减少。</p>
+<pre><code>/**
+ * 解大图内存不足时尝试5次, samplesize增大
+ * 
+ * @author panjf
+ * @param file
+ * @param max 宽或高的最大值, &lt;= 0 , 能解多大解多大, &gt; 0, 最大max, 内存不足解更小
+ * @return
+ */
+public static Bitmap getBitmapFromFileLimitSize(String file, int max) {
+    if (file == null)
+        return null;
+    Bitmap bm = null;
+    BitmapFactory.Options options = new BitmapFactory.Options();
+    options.inSampleSize = 1;
+
+    if(max &gt; 0){
+        options.inJustDecodeBounds = true;
+        // 获取这个图片的宽和高
+        bm = BitmapFactory.decodeFile(file, options);
+        options.inJustDecodeBounds = false;
+
+        float blW = (float) options.outWidth / max;
+        float blH = (float) options.outHeight / max;
+
+        if (blW &gt; 1 || blH &gt; 1) {
+            if(blW &gt; blH )
+                options.inSampleSize = (int) (blW + 0.9f);
+            else
+                options.inSampleSize = (int) (blH + 0.9f);
+        }
+    }
+
+    int i = 0;
+    while (i &lt;= 10) {
+        i++;
+        try {
+            bm = BitmapFactory.decodeFile(file, options);
+            break;
+        } catch (OutOfMemoryError e) {
+
+            options.inSampleSize++;
+            e.printStackTrace();
+        }
+    }
+    return bm;
+}</code></pre><p>作为对比，这个方法通过Bitmap.Options来缩放图片，用到采用率inSampleSize这个参数。上面这个方法，如果输入的max为0，初始化的采样率为1，采样后的图片即原图大小。内存不足时，增大采样率（采样率通常是2的N次方，如果采样率为3，会向下去一个最接近2的N次方的整数，即2，所以该方法中的while循环中，有效的解图并不足10次，但好像也不是如注释中说的尝试5次），例如采样率为4，宽高像素均为原来的1/4,采样后图片占用内存即为原来的1/16。</p>
+<p>经过实测，多数情况下不会碰到内存不足的情况，while循环中的break语句会被执行到，因此只会解一次图。所以必须保证输入的参数max是有意义的值，才能起到压缩的效果。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+
+        
+        这里可以写作者留言，标签和 hexo 中所有变量及辅助函数等均可调用，示例：<a href="/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" target="_blank" rel="external">http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/</a>
+        
+    </div>
+    
+    <footer>
+        <a href="http://liangbin.xyz">
+            <img src="/img/avatar.jpg" alt="LIANGBIN@PA">
+            LIANGBIN@PA
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/&title=《Android图像处理中踩过的一些坑》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/&title=《Android图像处理中踩过的一些坑》 — 云原生笔记&source=关于图片的操作一直是Andriod开发中备受关注的一个点，特别是新手，一不注意分分钟就会碰到OOM异常。本文总结一下，图片处理这一块，踩过的坑有哪些。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android图像处理中踩过的一些坑》 — 云原生笔记&url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/&via=http://liangbin.xyz" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/09/12/%E4%BA%91%E5%8E%9F%E7%94%9F%E7%9B%B8%E5%85%B3%E7%AB%99%E7%82%B9/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">云原生相关站点</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">正确理解LayoutInflater.inflate()</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>LIANGBIN@PA &copy; 2016 - 2019</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/&title=《Android图像处理中踩过的一些坑》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/&title=《Android图像处理中踩过的一些坑》 — 云原生笔记&source=关于图片的操作一直是Andriod开发中备受关注的一个点，特别是新手，一不注意分分钟就会碰到OOM异常。本文总结一下，图片处理这一块，踩过的坑有哪些。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Android图像处理中踩过的一些坑》 — 云原生笔记&url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/&via=http://liangbin.xyz" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://liangbin.xyz/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '死鬼去哪里了！';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '(つェ⊂)咦!又好了!';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
