@@ -14,21 +14,21 @@
     
     
     
-    <title>POD对象字段解析 | 云原生笔记</title>
+    <title>Pod对象字段解析 | 云原生笔记</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
     <meta name="keywords" content="Kubernetes">
-    <meta name="description" content="####简介  #### Pod是k8s中容器编排调度的最小单位。初学者最常用的命令之一就是 kubectl get pod。平常我们不直接写Pod的yaml文件，但是当我们以kubectl describe 命令或者 kubectl get pod -o yaml查看Pod排错时，经常看到五花八门的各种字段。梳理Pod对象数据结构，熟悉其各字段，有助于我们加深对Pod的理解，更能帮助我们快速定位">
+    <meta name="description" content="简介Pod是k8s中容器编排调度的最小单位。初学者最常用的命令之一就是 kubectl get pod。平常我们不直接写Pod的yaml文件，但是当我们以kubectl describe 命令或者 kubectl get pod -o yaml查看Pod排错时，经常看到五花八门的各种字段。梳理Pod对象数据结构，熟悉其各字段，有助于我们加深对Pod的理解，更能帮助我们快速定位问题所在。废话不多说，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="POD对象字段解析">
-<meta property="og:url" content="http:&#x2F;&#x2F;liangbin.xyz&#x2F;2018&#x2F;02&#x2F;03&#x2F;pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&#x2F;index.html">
+<meta property="og:title" content="Pod对象字段解析">
+<meta property="og:url" content="http:&#x2F;&#x2F;liangbin.xyz&#x2F;2018&#x2F;02&#x2F;03&#x2F;Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90&#x2F;index.html">
 <meta property="og:site_name" content="云原生笔记">
-<meta property="og:description" content="####简介  #### Pod是k8s中容器编排调度的最小单位。初学者最常用的命令之一就是 kubectl get pod。平常我们不直接写Pod的yaml文件，但是当我们以kubectl describe 命令或者 kubectl get pod -o yaml查看Pod排错时，经常看到五花八门的各种字段。梳理Pod对象数据结构，熟悉其各字段，有助于我们加深对Pod的理解，更能帮助我们快速定位">
+<meta property="og:description" content="简介Pod是k8s中容器编排调度的最小单位。初学者最常用的命令之一就是 kubectl get pod。平常我们不直接写Pod的yaml文件，但是当我们以kubectl describe 命令或者 kubectl get pod -o yaml查看Pod排错时，经常看到五花八门的各种字段。梳理Pod对象数据结构，熟悉其各字段，有助于我们加深对Pod的理解，更能帮助我们快速定位问题所在。废话不多说，">
 <meta property="article:published_time" content="2018-02-03T11:24:29.000Z">
-<meta property="article:modified_time" content="2020-01-13T11:25:37.749Z">
+<meta property="article:modified_time" content="2020-01-13T11:29:30.446Z">
 <meta property="article:author" content="LIANGBIN@PA">
 <meta property="article:tag" content="Kubernetes">
 <meta name="twitter:card" content="summary">
@@ -105,7 +105,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">POD对象字段解析</div>
+        <div class="flex-col header-title ellipsis">Pod对象字段解析</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -127,7 +127,7 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">POD对象字段解析</h1>
+        <h1 class="title">Pod对象字段解析</h1>
         <h5 class="subtitle">
             
                 <time datetime="2018-02-03T11:24:29.000Z" itemprop="datePublished" class="page-time">
@@ -150,16 +150,16 @@
     <aside class="post-widget">
         <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
             <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#代码"><span class="post-toc-number">1.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#归类"><span class="post-toc-number">2.</span> <span class="post-toc-text">归类</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Tips"><span class="post-toc-number">3.</span> <span class="post-toc-text">Tips</span></a></li></ol>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">简介</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#代码"><span class="post-toc-number">2.</span> <span class="post-toc-text">代码</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#归类"><span class="post-toc-number">3.</span> <span class="post-toc-text">归类</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Tips"><span class="post-toc-number">4.</span> <span class="post-toc-text">Tips</span></a></li></ol>
         </nav>
     </aside>
 
 
-<article id="post-pod数据结构"
+<article id="post-Pod对象字段解析"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">POD对象字段解析</h1>
+        <h1 class="post-card-title">Pod对象字段解析</h1>
         <div class="post-meta">
             <time class="post-time" title="2018-02-03 19:24:29" datetime="2018-02-03T11:24:29.000Z"  itemprop="datePublished">2018-02-03</time>
 
@@ -174,8 +174,7 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <p>####简介  ####</p>
-<p>Pod是k8s中容器编排调度的最小单位。初学者最常用的命令之一就是 kubectl get pod。平常我们不直接写Pod的yaml文件，但是当我们以kubectl describe 命令或者 kubectl get pod -o yaml查看Pod排错时，经常看到五花八门的各种字段。梳理Pod对象数据结构，熟悉其各字段，有助于我们加深对Pod的理解，更能帮助我们快速定位问题所在。废话不多说，来看源码。</p>
+            <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Pod是k8s中容器编排调度的最小单位。初学者最常用的命令之一就是 kubectl get pod。平常我们不直接写Pod的yaml文件，但是当我们以kubectl describe 命令或者 kubectl get pod -o yaml查看Pod排错时，经常看到五花八门的各种字段。梳理Pod对象数据结构，熟悉其各字段，有助于我们加深对Pod的理解，更能帮助我们快速定位问题所在。废话不多说，来看源码。</p>
 <h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><p>代码位置：kubernetes\pkg\apis\core\type.go</p>
 <pre><code>// Pod is a collection of containers, used as either input (create, update) or as output (list, get).
 type Pod struct {
@@ -291,7 +290,7 @@ type Pod struct {
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/&title=《POD对象字段解析》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/&title=《Pod对象字段解析》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -301,22 +300,22 @@ type Pod struct {
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/&title=《POD对象字段解析》 — 云原生笔记&source=最怕你一生碌碌无为，还安慰自己平凡可贵" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/&title=《Pod对象字段解析》 — 云原生笔记&source=最怕你一生碌碌无为，还安慰自己平凡可贵" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《POD对象字段解析》 — 云原生笔记&url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/&via=http://liangbin.xyz" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Pod对象字段解析》 — 云原生笔记&url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/&via=http://liangbin.xyz" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -443,7 +442,7 @@ type Pod struct {
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/&title=《POD对象字段解析》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/&title=《Pod对象字段解析》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -453,22 +452,22 @@ type Pod struct {
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/&title=《POD对象字段解析》 — 云原生笔记&source=最怕你一生碌碌无为，还安慰自己平凡可贵" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/&title=《Pod对象字段解析》 — 云原生笔记&source=最怕你一生碌碌无为，还安慰自己平凡可贵" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《POD对象字段解析》 — 云原生笔记&url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/&via=http://liangbin.xyz" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Pod对象字段解析》 — 云原生笔记&url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/&via=http://liangbin.xyz" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -479,7 +478,7 @@ type Pod struct {
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://liangbin.xyz/2018/02/03/pod%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" alt="微信分享二维码">
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://liangbin.xyz/2018/02/03/Pod%E5%AF%B9%E8%B1%A1%E5%AD%97%E6%AE%B5%E8%A7%A3%E6%9E%90/" alt="微信分享二维码">
 </div>
 
 
