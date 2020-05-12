@@ -1,177 +1,245 @@
 <!DOCTYPE html>
-<html>
+
+
+  <html class="light page-post">
+
+
 <head>
-    
+  <meta charset="utf-8">
+  
+  <title>正确理解LayoutInflater.inflate() | 云原生笔记</title>
 
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    
+  
+    <meta name="keywords" content="Android," />
+  
 
-
-
-    <meta charset="utf-8">
-    
-    
-    
-    
-    <title>正确理解LayoutInflater.inflate() | 云原生笔记</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    
-    <meta name="theme-color" content="#3F51B5">
-    
-    
-    <meta name="keywords" content="Android">
-    <meta name="description" content="平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。下面和大家讨论讨论其中的细节，涉及内容并不深奥，可能我们不在意常忽略了。如果有不当处，欢迎指正。">
+  <meta name="description" content="平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。下面和大家讨论讨论其中的细节，涉及内容并不深奥，可能我们不在意常忽略了。如果有不当处，欢迎指正。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="正确理解LayoutInflater.inflate()">
 <meta property="og:url" content="http:&#x2F;&#x2F;liangbin.xyz&#x2F;2016&#x2F;03&#x2F;11&#x2F;%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()&#x2F;index.html">
 <meta property="og:site_name" content="云原生笔记">
 <meta property="og:description" content="平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。下面和大家讨论讨论其中的细节，涉及内容并不深奥，可能我们不在意常忽略了。如果有不当处，欢迎指正。">
 <meta property="og:image" content="http:&#x2F;&#x2F;i3.piimg.com&#x2F;416da2dfd72cd273.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;i3.piimg.com&#x2F;cfe65b9909457db1.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;i3.piimg.com&#x2F;416da2dfd72cd273.png">
 <meta property="og:image" content="http:&#x2F;&#x2F;i4.piimg.com&#x2F;6fb55e729d540929.png">
 <meta property="article:published_time" content="2016-03-10T18:55:29.000Z">
-<meta property="article:modified_time" content="2019-12-12T02:27:31.840Z">
+<meta property="article:modified_time" content="2019-12-12T02:27:32.000Z">
 <meta property="article:author" content="LIANGBIN@PA">
 <meta property="article:tag" content="Android">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http:&#x2F;&#x2F;i3.piimg.com&#x2F;416da2dfd72cd273.png">
-    
-        <link rel="alternate" type="application/atom+xml" title="云原生笔记" href="/atom.xml">
-    
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
-    <script>window.lazyScripts=[]</script>
 
-    <!-- custom head -->
-    
+  
 
-<meta name="generator" content="Hexo 4.1.1"></head>
+  
+    <link rel="icon" href="/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbeddx" rel="stylesheet">
+
+
+  
+    
+<link rel="stylesheet" href="/css/personal-style.css">
+
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-38189205-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?57e94d016e201fba3603a8a2b0263af0";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+
+<meta name="generator" content="Hexo 4.1.1"><link rel="alternate" href="/atom.xml" title="云原生笔记" type="application/atom+xml">
+</head>
 
 <body>
-    <div id="loading" class="active"></div>
 
-    <aside id="menu" class="hide" >
-  <div class="inner flex-row-vertical">
-    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
-        <i class="icon icon-lg icon-close"></i>
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">盒子</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">盒子</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
     </a>
-    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
-      <div class="brand">
-        <a href="/" class="avatar waves-effect waves-circle waves-light">
-          <img src="/img/avatar.jpg">
-        </a>
-        <hgroup class="introduce">
-          <h5 class="nickname">LIANGBIN@PA</h5>
-          <a href="mailto:hzliangbin@foxmail.com" title="hzliangbin@foxmail.com" class="mail">hzliangbin@foxmail.com</a>
-        </hgroup>
-      </div>
-    </div>
-    <div class="scroll-wrap flex-col">
-      <ul class="nav">
-        
-            <li class="waves-block waves-effect">
-              <a href="/"  >
-                <i class="icon icon-lg icon-home"></i>
-                首页
-              </a>
-            </li>
-        
-            <li class="waves-block waves-effect">
-              <a href="/archives"  >
-                <i class="icon icon-lg icon-archives"></i>
-                归档
-              </a>
-            </li>
-        
-            <li class="waves-block waves-effect">
-              <a href="/tags"  >
-                <i class="icon icon-lg icon-tags"></i>
-                标签
-              </a>
-            </li>
-        
-            <li class="waves-block waves-effect">
-              <a href="/about"  >
-                <i class="icon icon-lg icon-link"></i>
-                关于作者
-              </a>
-            </li>
-        
-      </ul>
-    </div>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
   </div>
-</aside>
 
-    <main id="main">
-        <header class="top-header" id="header">
-    <div class="flex-row">
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
-          <i class="icon icon-lg icon-navicon"></i>
-        </a>
-        <div class="flex-col header-title ellipsis">正确理解LayoutInflater.inflate()</div>
-        
-        <div class="search-wrap" id="search-wrap">
-            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
-                <i class="icon icon-lg icon-chevron-left"></i>
-            </a>
-            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="検索">
-            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
-                <i class="icon icon-lg icon-search"></i>
-            </a>
-        </div>
-        
-        
-        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
-            <i class="icon icon-lg icon-share-alt"></i>
-        </a>
-        
+
+</div>
+
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-正确理解LayoutInflater.inflate()" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">正确理解LayoutInflater.inflate()</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2016.03.11</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>LIANGBIN@PA</span>
+        </span>
+      
+
+      
+
+
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+      
     </div>
-</header>
-<header class="content-header post-header">
+  </header>
 
-    <div class="container fade-scale">
-        <h1 class="title">正确理解LayoutInflater.inflate()</h1>
-        <h5 class="subtitle">
-            
-                <time datetime="2016-03-10T18:55:29.000Z" itemprop="datePublished" class="page-time">
-  2016-03-11
-</time>
-
-
-            
-        </h5>
-    </div>
-
+  <div class="article-content">
     
-
-
-</header>
-
-
-<div class="container body-wrap">
-    
-
-<article id="post-正确理解LayoutInflater.inflate()"
-  class="post-article article-type-post fade" itemprop="blogPost">
-
-    <div class="post-card">
-        <h1 class="post-card-title">正确理解LayoutInflater.inflate()</h1>
-        <div class="post-meta">
-            <time class="post-time" title="2016-03-11 02:55:29" datetime="2016-03-10T18:55:29.000Z"  itemprop="datePublished">2016-03-11</time>
-
-            
-
-
-            
-<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
-    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
-</span>
-
-
-        </div>
-        <div class="post-content" id="post-content" itemprop="postContent">
-            <p>平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。<br>下面和大家讨论讨论其中的细节，涉及内容并不深奥，可能我们不在意常忽略了。如果有不当处，欢迎指正。<a id="more"></a></p>
+      <p>平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。<br>下面和大家讨论讨论其中的细节，涉及内容并不深奥，可能我们不在意常忽略了。如果有不当处，欢迎指正。<a id="more"></a></p>
 <p>常用的获取LayoutInflater实例的方法有两种。第一种如下：</p>
 <pre><code>@Override
 public View getView(int position, View convertView, ViewGroup parent) {
@@ -243,43 +311,21 @@ public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean atta
     //  mLinearLayout.addView(buttonLayout);
     }
 }</code></pre><p>这个时候我们看运行结果: 图1</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://i3.piimg.com/416da2dfd72cd273.png" alt="" title="">
-                </div>
-                <div class="image-caption"></div>
-            </figure>
-
+<p><img src="http://i3.piimg.com/416da2dfd72cd273.png" alt=""></p>
 <p>作为对比，如果将第三个参数 attachToRoot 改为 false 探究其作用。</p>
 <pre><code>View buttonLayout = inflater.inflate(R.layout.tv_test, mLinearLayout, false);</code></pre><p>得到结果为： 图2</p>
-{% image http://i3.piimg.com/cfe65b9909457db1.png '' '' %}
-
+<p><img src="http://i3.piimg.com/cfe65b9909457db1.png" alt=""></p>
 <p>attachToRoot 设为 false 之后，buttonLayout 并没有附着在 mLinearLayout 上，所以得不到显示。不难预料，取消最后一行代码的注释，再运行。得到的结果将为图1。换句话说，</p>
 <pre><code>View buttonLayout = inflater.inflate(R.layout.tv_test, mLinearLayout, true);</code></pre><p>和以下两行代码效果是等价的。</p>
 <pre><code>View buttonLayout = inflater.inflate(R.layout.tv_test, mLinearLayout, false);
 mLinearLayout.addView(buttonLayout);</code></pre><p>这时候先让我们的注意力重新回到inflate()的第一个重载方法。</p>
 <pre><code> View buttonLayout = inflater.inflate(R.layout.tv_test, mLinearLayout);
 mLinearLayout.addView(buttonLayout);</code></pre><p>运行结果如图：图3</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://i3.piimg.com/416da2dfd72cd273.png" alt="" title="">
-                </div>
-                <div class="image-caption"></div>
-            </figure>
-
+<p><img src="http://i3.piimg.com/416da2dfd72cd273.png" alt=""></p>
 <p>运行结果跟图1是一样的。调整第二个参数为 null</p>
 <pre><code>View buttonLayout = inflater.inflate(R.layout.tv_test, null);
 mLinearLayout.addView(buttonLayout);</code></pre><p>运行结果如下：图4</p>
-<figure class="image-bubble">
-                <div class="img-lightbox">
-                    <div class="overlay"></div>
-                    <img src="http://i4.piimg.com/6fb55e729d540929.png" alt="" title="">
-                </div>
-                <div class="image-caption"></div>
-            </figure>
-
+<p><img src="http://i4.piimg.com/6fb55e729d540929.png" alt=""></p>
 <p><strong>注意到加载进来的tv_test并没有居中对齐。</strong></p>
 <p>通过实际的例子，我们有了直观的印象。我们来看看相关的源码，追溯原因。</p>
 <pre><code>public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot) {
@@ -369,287 +415,233 @@ return new BrandsTopHolder(view);</code></pre><p>  }</p>
 <p>参考文档：</p>
 <p><a href="http://http://blog.csdn.net/guolin_blog/article/details/12921889/" target="_blank" rel="noopener">Android LayoutInflater原理分析，带你一步步深入了解View(一) </a><br><a href="http://https://www.bignerdranch.com/blog/understanding-androids-layoutinflater-inflate/" target="_blank" rel="noopener">Understanding Android’s LayoutInflater.inflate()</a></p>
 
-        </div>
-
-        <blockquote class="post-copyright">
     
-    <footer>
-        <a href="http://liangbin.xyz">
-            <img src="/img/avatar.jpg" alt="LIANGBIN@PA">
-            LIANGBIN@PA
-        </a>
-    </footer>
-</blockquote>
-
-        
-<div class="page-reward">
-    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
-</div>
-
-
-
-        <div class="post-footer">
-            
-	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li></ul>
-
-
-            
-<div class="page-share-wrap">
-    
-
-<div class="page-share" id="pageShare">
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/&title=《正确理解LayoutInflater.inflate()》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/&title=《正确理解LayoutInflater.inflate()》 — 云原生笔记&source=平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。下面和大..." data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/" data-title=" Facebook">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《正确理解LayoutInflater.inflate()》 — 云原生笔记&url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/&via=http://liangbin.xyz" data-title=" Twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/" data-title=" Google+">
-          <i class="icon icon-google-plus"></i>
-        </a>
-      </li>
-    </ul>
- </div>
-
-
-
-    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
-        <i class="icon icon-share-alt icon-lg"></i>
-    </a>
-</div>
-
-
-
-        </div>
-    </div>
-
-    
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="waves-block waves-effect prev">
-      <a href="/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Android图像处理中踩过的一些坑</h4>
-      </a>
-    </div>
-  
-
-  
-</nav>
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  </div>
 
 </article>
 
-<div id="reward" class="page-modal reward-lay">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <h3 class="reward-title">
-        <i class="icon icon-quote-left"></i>
-        谢谢大爷~
-        <i class="icon icon-quote-right"></i>
-    </h3>
-    <div class="reward-content">
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持forsigner</div>
+        <ul>
         
-        <div class="reward-code">
-            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
-        </div>
-        
-        <label class="reward-toggle">
-            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
-                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
-            <div class="reward-toggle-ctrol">
-                <span class="reward-toggle-item wechat">微信</span>
-                <span class="reward-toggle-label"></span>
-                <span class="reward-toggle-item alipay">支付宝</span>
-            </div>
-        </label>
-        
-    </div>
-</div>
-
-
-
-</div>
-
-        <footer class="footer">
-    <div class="top">
-        
-<p>
-    <span id="busuanzi_container_site_uv" style='display:none'>
-        站点总访客数：<span id="busuanzi_value_site_uv"></span>
-    </span>
-    <span id="busuanzi_container_site_pv" style='display:none'>
-        站点总访问量：<span id="busuanzi_value_site_pv"></span>
-    </span>
-</p>
-
-
-        <p>
+          <li class="item">
             
-                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+              <span>微信扫一扫</span>
             
-            <span>このブログの内容物は<a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja" target="_blank">クリエイティブ・コモンズ 表示 - 非営利 - 継承 4.0 国際ライセンスの下に提供されています</a></span>
-        </p>
+            <img src="/images/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            
+              <span>支付宝扫一扫</span>
+            
+            <img src="/images/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
     </div>
-    <div class="bottom">
-        <p><span>LIANGBIN@PA &copy; 2016 - 2020</span>
-            <span>
-                
-                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
-            </span>
-        </p>
-    </div>
-</footer>
-
-    </main>
-    <div class="mask" id="mask"></div>
-<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+  </div>
 
 
-
-<div class="global-share" id="globalShare">
-    <ul class="reset share-icons">
-      <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/&title=《正确理解LayoutInflater.inflate()》 — 云原生笔记&pic=http://liangbin.xyz/img/avatar.jpg" data-title="微博">
-          <i class="icon icon-weibo"></i>
-        </a>
-      </li>
-      <li>
-        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
-          <i class="icon icon-weixin"></i>
-        </a>
-      </li>
-      <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/&title=《正确理解LayoutInflater.inflate()》 — 云原生笔记&source=平时开发的时候，加载布局经常会遇到LayoutInflater，用倒是经常用了，但是之前一直没有探究其中的细节。有疑问，当然还是要搞清楚了才放心。下面和大..." data-title=" QQ">
-          <i class="icon icon-qq"></i>
-        </a>
-      </li>
-      <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/" data-title=" Facebook">
-          <i class="icon icon-facebook"></i>
-        </a>
-      </li>
-      <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《正确理解LayoutInflater.inflate()》 — 云原生笔记&url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/&via=http://liangbin.xyz" data-title=" Twitter">
-          <i class="icon icon-twitter"></i>
-        </a>
-      </li>
-      <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/" data-title=" Google+">
-          <i class="icon icon-google-plus"></i>
-        </a>
-      </li>
-    </ul>
- </div>
-
-
-<div class="page-modal wx-share" id="wxShare">
-    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://liangbin.xyz/2016/03/11/%E6%AD%A3%E7%A1%AE%E7%90%86%E8%A7%A3LayoutInflater.inflate()/" alt="微信分享二维码">
-</div>
-
-
-
-
-    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
-<script>
-var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
-
-
-</script>
-
-<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
-
-
-<div class="search-panel" id="search-panel">
-    <ul class="search-result" id="search-result"></ul>
-</div>
-<template id="search-tpl">
-<li class="item">
-    <a href="{path}" class="waves-block waves-effect">
-        <div class="title ellipsis" title="{title}">{title}</div>
-        <div class="flex-row flex-middle">
-            <div class="tags ellipsis">
-                {tags}
-            </div>
-            <time class="flex-col time">{date}</time>
-        </div>
+   
+  <div class="box-prev-next clearfix">
+    <a class="hide pull-left" href="/">
+        <i class="icon icon-angle-left"></i>
     </a>
-</li>
-</template>
-
-<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
-
-
+    <a class="show pull-right" href="/2016/07/17/Android%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86%E4%B8%AD%E8%B8%A9%E8%BF%87%E7%9A%84%E4%B8%80%E4%BA%9B%E5%9D%91/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
 
 
 
 
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
 
 
 
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+
+<!-- Gitalk评论插件通用代码 -->
+<div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
 <script>
-(function() {
-    var OriginTitile = document.title, titleTime;
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            document.title = '死鬼去哪里了！';
-            clearTimeout(titleTime);
-        } else {
-            document.title = '(つェ⊂)咦!又好了!';
-            titleTime = setTimeout(function() {
-                document.title = OriginTitile;
-            },2000);
-        }
-    });
-})();
+const gitalk = new Gitalk({
+  clientID: '277317290454635afa73',
+  clientSecret: '78223c859304da5e8d71bfce136d436c6ff95c37',
+  repo: 'blog-comment',
+  owner: 'forsigner',
+  // 在这里设置一下截取前50个字符串, 这是因为 github 对 label 的长度有了要求, 如果超过
+  // 50个字符串则会报错.
+  // id: location.pathname.split('/').pop().substring(0, 49),
+  id: md5(location.pathname),
+  admin: ['forsigner'],
+  // facebook-like distraction free mode
+  distractionFreeMode: false
+})
+gitalk.render('gitalk-container')
 </script>
+<!-- Gitalk代码结束 -->
 
 
+
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
 
 </body>
 </html>
